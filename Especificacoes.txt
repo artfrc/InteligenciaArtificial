@@ -1,0 +1,34 @@
+Labirinto
+=> Estados	  - Matrizes NxN com o jogador (matriz[i][j] = 2) posicionado em lugares distintos.
+=> Estado inicial - Matriz com o jogador posicionado em certo ponto da matriz (matriz[i][j] = 2)
+=> Estado final   - Matriz com o jogador posicionado em certo ponto da matriz (matriz[i][j] = 3)
+=> Ações	  - Jogador pode se movimentar para cima, baixo, esquerda, direita, desde que matriz[i][j] != 0.
+
+Quebra cabeça
+=> Estados	  - Matrizes NxN com um espaço em branco
+=> Estado inicial - Matriz com os números de 1 a N-1 fora de ordem
+=> Estado final   - Matriz com os números em ordem, sendo o espaço do meio vazio.
+Exemplo:
+		    N = 3, então
+		    Estado inicial:
+		    2 1 4
+		    3 6 5
+		    8 7
+
+		    Estado final:
+		    1 2 3
+    		    4   5
+		    6 7 8
+
+=> Ações	  - Mover um número para o espaço em branco. Esse número deve estar a direita, esquerda, acima ou abaixo do espaço vazio.
+
+============================================================================================================================================
+
+Geral para os dois problemas:
+
+1) Criar matriz com estado inicial.
+2) A função que irá resolver o problema precisa criar os novos estados que é possível ir.
+ 
+Específico para cada problema:
+1) Estado inicial
+2) Estado final
