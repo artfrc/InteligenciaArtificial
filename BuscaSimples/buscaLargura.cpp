@@ -13,10 +13,10 @@ typedef struct Node {
     int row;
     int column;
     int height;
+    Node() {}
     Node(int row, int column, int height) : row(row), column(column), height(height) {}
 }Node;
 
-Node aux; // irá auxiliar na função solve
 pii END; // posição final para o personagem no labirinto
 
 // auxilia para percorrer a matriz
@@ -25,6 +25,7 @@ int dy[] = {0,0,-1,1};
 
 int OPC; // 1 -> Jogo quebra-cabeça ; 2 -> Jogo do labirinto
 int totalNodes = 0;
+
 
 set<vvi> checkedStates; // guardo os estados já visitados
 
@@ -58,15 +59,16 @@ bool isSolution(int i, int j, vvi mtx, int N) {
     }
 }
 
+Node aux; // irá auxiliar na função solve
 
 Node* solve(Node* node, qvvi& qMatrix, int N) {
     // Aqui será feito a busca em largura para os problemas
-    queue<Node> Queue;
+    queue<Node> Queue; // Fila para fazer a busca em largura
     aux.column = node->column;
     aux.height = node->height;
     aux.row = node->row;
     
-    checkedStates.insert(qMatrix.front());
+    checkedStates.insert(qMatrix.front()); // Estados que já foram visitados
 
     Queue.push(aux);
     int i,j;    
@@ -138,7 +140,7 @@ Node* solve(Node* node, qvvi& qMatrix, int N) {
 }
 
 int main() { _
-    Node* BEGIN; // posição inicial do problema
+    Node* BEGIN; // posição incial na matriz
     int N; // N = matriz NxN
     while(cin >> OPC >> N) {
         totalNodes = 0;
@@ -173,7 +175,7 @@ int main() { _
         }
        
         qMatrix.push(matrix); // Inserindo minha matriz inicial na fila
-        Node* ans = solve(BEGIN,qMatrix,N); // ans será minha resposta
+        Node* ans = solve(BEGIN,qMatrix,N); // irá dizer se encontrei ou não a solução
         if(ans != NULL) {
             cout << ">> Encontrei!" << endl;
             cout << ">> Profundidade da meta: " << ans->height << endl;
