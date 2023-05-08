@@ -8,17 +8,23 @@ typedef pair<int,int> pii;
 typedef vector<vector<int>> vvi;
 typedef queue<vector<vector<int>>> qvvi;
 
+// Struct para guardar a posição da matriz de um nó e a altura desse nó
+typedef struct Node {
+    int row;
+    int column;
+    int height;
+    Node(int row, int column, int height) : row(row), column(column), height(height) {}
+}Node;
+
+Node aux; // irá auxiliar na função solve
+pii END; // posição final para o personagem no labirinto
+
 // auxilia para percorrer a matriz
 int dx[] = {-1,1,0,0}; 
 int dy[] = {0,0,-1,1};
 
-
 int OPC; // 1 -> Jogo quebra-cabeça ; 2 -> Jogo do labirinto
 int totalNodes = 0;
-
-pii BEGIN; // posição que personagem começa no labirinto ou vazio quebra-cabeça
-
-pii END; // posição final para o personagem no labirinto
 
 set<vvi> checkedStates; // guardo os estados já visitados
 
@@ -52,20 +58,27 @@ bool isSolution(int i, int j, vvi mtx, int N) {
     }
 }
 
-bool solve(int i, int j, qvvi& qMatrix, int N) {
+
+Node* solve(Node* node, qvvi& qMatrix, int N) {
     // Aqui será feito a busca em largura para os problemas
-    queue<pii> Queue;
-    Queue.push({i,j}); // Guardo a posição i e j
+    queue<Node> Queue;
+    aux.column = node->column;
+    aux.height = node->height;
+    aux.row = node->row;
     
+    checkedStates.insert(qMatrix.front());
+
+    Queue.push(aux);
+    int i,j;    
     while(!Queue.empty()) {
         vvi matrix = qMatrix.front(); // matriz representando o estado atual
         qMatrix.pop();
 
         // posições que personagem está no labirinto ou espaço vazio no quebra-cabeça
-        i = Queue.front().first;
-        j = Queue.front().second;
+        aux = Queue.front();
+        i = Queue.front().row;
+        j = Queue.front().column;
         Queue.pop();
-
 
         // Printa o estado que estou
         
@@ -83,7 +96,7 @@ bool solve(int i, int j, qvvi& qMatrix, int N) {
 
         // Verifica se cheguei na solução
         if(isSolution(i,j,matrix,N)) {
-            return true;
+            return &aux;
         }
 
         // Faço a busca pelos possíveis próximos estados
@@ -117,13 +130,15 @@ bool solve(int i, int j, qvvi& qMatrix, int N) {
 
             checkedStates.insert(newState); // registro que esse novo estado foi visitado
             qMatrix.push(newState); // coloco ele na fila da busca
-            Queue.push({x,y}); // posições do meu novo estado que se encontra o personagem no labirinto ou posição vazia no quebra-cabeça
+            Node newNode(x,y,aux.height+1);
+            Queue.push(newNode); // posições do meu novo estado que se encontra o personagem no labirinto ou posição vazia no quebra-cabeça
         }
     }
-    return false; // não encontrou solução
+    return NULL; // não encontrou solução
 }
 
 int main() { _
+    Node* BEGIN; // posição inicial do problema
     int N; // N = matriz NxN
     while(cin >> OPC >> N) {
         totalNodes = 0;
@@ -142,13 +157,13 @@ int main() { _
                 cin >> matrix[i][j];
                 if(OPC == 1) { // Quebra-cabeça
                     if(matrix[i][j] == 0) { // Posição vaga no quebra-cabça
-                        BEGIN.first = i;
-                        BEGIN.second = j;
+                        BEGIN->row = i;
+                        BEGIN->column = j;
                     }
                 } else { // Labirinto
                     if(matrix[i][j] == 2) { // Posição inicial do personagem
-                        BEGIN.first = i;
-                        BEGIN.second = j;
+                        BEGIN->row = i;
+                        BEGIN->column = j;
                     } else if(matrix[i][j] == 3) { // Posição que deseja chegar
                         END.first = i;
                         END.second = j;
@@ -158,9 +173,10 @@ int main() { _
         }
        
         qMatrix.push(matrix); // Inserindo minha matriz inicial na fila
-       
-        if(solve(BEGIN.first,BEGIN.second,qMatrix,N)) {
+        Node* ans = solve(BEGIN,qMatrix,N); // ans será minha resposta
+        if(ans != NULL) {
             cout << ">> Encontrei!" << endl;
+            cout << ">> Profundidade da meta: " << ans->height << endl;
         } else {
             cout << ">> Nao encontrei!" << endl;
         }
