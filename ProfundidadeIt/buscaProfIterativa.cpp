@@ -59,7 +59,7 @@ bool isSolution(int i, int j, vvi mtx, int N) {
 }
 
 Node aux; // irá auxiliar na função solve
-bool FIND = false;
+bool FIND = false; // irá dizer se uma solução foi encontrada
 
 bool solve(Node node, int N) {
 
@@ -129,7 +129,7 @@ bool solve(Node node, int N) {
         Node newNode(x,y,h+1,newState);
         solve(newNode,N);
     }
-    return false; // não encontrou solução
+    return FIND = false; // não encontrou solução
 }
 
 int main() { _
