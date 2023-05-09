@@ -63,7 +63,7 @@ bool FIND = false; // irá dizer se uma solução foi encontrada
 
 bool solve(Node node, int N) {
 
-    if(FIND) return true; // caso já achei minha solução, então não deixo minha recursão continuar
+    if(FIND) return true; // caso já achei minha solução, então não deixo minha recursão continuar..
 
     // Aqui será feito a busca em profundiade para os problemas
 
