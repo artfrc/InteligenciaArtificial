@@ -4,11 +4,6 @@
 #define _ ios_base::sync_with_stdio(0); cin.tie(0);
 using namespace std;
 
-/* ==================================================================
-/ ESSE ALGORITMO SERVE TAMBÉM PARA A BUSCA PELO MENOR CUSTO, JÁ QUE /
-/           O CUSTO DE TODOS OS PASSOS SÃO IGUAIS (1).              /
-/ ================================================================ */
-
 typedef pair<int,int> pii;
 typedef vector<vector<int>> vvi;
 
@@ -64,81 +59,77 @@ bool isSolution(int i, int j, vvi mtx, int N) {
 }
 
 Node aux; // irá auxiliar na função solve
+bool FIND = false;
 
-Node* solve(Node node, int N) {
-    // Aqui será feito a busca em largura para os problemas
+bool solve(Node node, int N) {
 
-    queue<Node> Queue; // Fila para fazer a busca em largura
-    Queue.push(node);
+    if(FIND) return true; // caso já achei minha solução, então não deixo minha recursão continuar
+
+    // Aqui será feito a busca em profundiade para os problemas
 
     checkedStates.insert(node.matrix); // Estados que já foram visitados
 
     int i,j,h;    
-    while(!Queue.empty()) {
-        aux = Queue.front();
-        Queue.pop();
-        
-        vvi matrix = aux.matrix; // matriz representando o estado atual
-        h = aux.height;
-        
-        // posições que personagem está no labirinto ou espaço vazio no quebra-cabeça
-        i = aux.row;
-        j = aux.column;
+    vvi matrix = node.matrix; // matriz representando o estado atual
+    h = node.height;
 
-        // Printa o estado que estou
+    // posições que personagem está no labirinto ou espaço vazio no quebra-cabeça
+    i = node.row;
+    j = node.column;
+
+    // Printa o estado que estou
         
-        cout << ">> Estado: " << totalNodes++ << endl;
+    cout << ">> Estado: " << totalNodes++ << endl;
         
-        for(int l = 0; l < N; l++) {
-            for(int r = 0; r < N; r++) {
-                cout << matrix[l][r] << " ";
-            }
-            cout << endl;
+    for(int l = 0; l < N; l++) {
+        for(int r = 0; r < N; r++) {
+            cout << matrix[l][r] << " ";
         }
         cout << endl;
+    }
+    cout << endl;
         
-        // =====================================================
+    // =====================================================
 
-        // Verifica se cheguei na solução
-        if(isSolution(i,j,matrix,N)) {
-            return &aux;
-        }
+    // Verifica se cheguei na solução
+    if(isSolution(i,j,matrix,N)) {
+        aux = node;
+        return FIND = true;
+    }
 
-        // Faço a busca pelos possíveis próximos estados
-        for(int k = 0; k < 4; k++) {
-            int x = i+dx[k];
-            int y = j+dy[k];
+    // Faço a busca pelos possíveis próximos estados
+    for(int k = 0; k < 4; k++) {
+        int x = i+dx[k];
+        int y = j+dy[k];
+        
+        // Verifico se são posições válidas para a matriz
+        if(x < 0 or x >= N or y < 0 or y >= N) continue;
+
+        // Se for labirinto, então não deixo visitar posições que são 0 na matriz
+        if(OPC == 2 and !matrix[x][y]) continue;
+
+        vvi newState(N,vector<int>(N)); // um possível estado que ainda não foi visitado
             
-            // Verifico se são posições válidas para a matriz
-            if(x < 0 or x >= N or y < 0 or y >= N) continue;
-
-            // Se for labirinto, então não deixo visitar posições que são 0 na matriz
-            if(OPC == 2 and !matrix[x][y]) continue;
-
-            vvi newState(N,vector<int>(N)); // um possível estado que ainda não foi visitado
-            
-            // monto minha matriz/estado
-            for(int l = 0; l < N; l++) {
-                for(int r = 0; r < N; r++) {
-                    if(l == x and r == y) {
-                        newState[l][r] = matrix[i][j];    
-                    } else if(l == i and r == j) {
-                        newState[l][r] = matrix[x][y];
-                    }else {
-                        newState[l][r] = matrix[l][r];                    
-                    }
+        // monto minha matriz/estado
+        for(int l = 0; l < N; l++) {
+            for(int r = 0; r < N; r++) {
+                if(l == x and r == y) {
+                    newState[l][r] = matrix[i][j];    
+                } else if(l == i and r == j) {
+                    newState[l][r] = matrix[x][y];
+                }else {
+                    newState[l][r] = matrix[l][r];                    
                 }
             }
-
-            // verifico se já visitei esse estado
-            if(checkedStates.find(newState) != checkedStates.end()) continue;
-
-            checkedStates.insert(newState); // registro que esse novo estado foi visitado
-            Node newNode(x,y,h+1,newState);
-            Queue.push(newNode); // posições do meu novo estado que se encontra o personagem no labirinto ou posição vazia no quebra-cabeça
         }
+
+        // verifico se já visitei esse estado
+        if(checkedStates.find(newState) != checkedStates.end()) continue;
+
+        Node newNode(x,y,h+1,newState);
+        solve(newNode,N);
     }
-    return NULL; // não encontrou solução
+    return false; // não encontrou solução
 }
 
 int main() { _
@@ -171,10 +162,10 @@ int main() { _
         BEGIN.matrix = matrix;
         BEGIN.height = 0;
 
-        Node* ans = solve(BEGIN,N); // irá dizer se encontrei ou não a solução
-        if(ans != NULL) {
+        solve(BEGIN,N); // irá dizer se encontrei ou não a solução
+        if(FIND) {
             cout << ">> Encontrei!" << endl;
-            cout << ">> Profundidade da meta: " << ans->height << endl;
+            cout << ">> Profundidade da meta: " << aux.height << endl;
         } else {
             cout << ">> Nao encontrei!" << endl;
         }
