@@ -4,6 +4,8 @@
 #define _ ios_base::sync_with_stdio(0); cin.tie(0);
 using namespace std;
 
+const int SUM = 5;
+
 typedef pair<int,int> pii;
 typedef vector<vector<int>> vvi;
 
@@ -16,6 +18,9 @@ typedef struct Node {
     Node() {}
     Node(int row, int column, int height, vvi matrix) : row(row), column(column), height(height), matrix(matrix) {}
 }Node;
+
+Node BEGIN; // posição inicial na matriz
+Node aux; // irá auxiliar na função solve
 
 pii END; // posição final para o personagem no labirinto
 
@@ -58,18 +63,18 @@ bool isSolution(int i, int j, vvi mtx, int N) {
     }
 }
 
-Node aux; // irá auxiliar na função solve
 bool FIND = false; // irá dizer se uma solução foi encontrada
+bool recursion = false; // irá dizer se é preciso chamar a recursão para uma busca mais profunda caso a solução ainda não tenha sido encontrada
 
-bool solve(Node node, int N) {
+bool solve(Node node, int N, int maxHeight) {
 
-    if(FIND) return true; // caso já achei minha solução, então não deixo minha recursão continuar..
-
+    if(FIND) return FIND; // caso já achei minha solução, então não deixo minha recursão continuar..
+    
     // Aqui será feito a busca em profundiade para os problemas
 
     checkedStates.insert(node.matrix); // Estados que já foram visitados
 
-    int i,j,h;    
+    int i,j,h;
     vvi matrix = node.matrix; // matriz representando o estado atual
     h = node.height;
 
@@ -94,7 +99,8 @@ bool solve(Node node, int N) {
     // Verifica se cheguei na solução
     if(isSolution(i,j,matrix,N)) {
         aux = node;
-        return FIND = true;
+        FIND = true;
+        return FIND;
     }
 
     // Faço a busca pelos possíveis próximos estados
@@ -123,19 +129,28 @@ bool solve(Node node, int N) {
             }
         }
 
+
         // verifico se já visitei esse estado
         if(checkedStates.find(newState) != checkedStates.end()) continue;
+        if(h+1 > maxHeight) {
+            recursion = true;
+            continue;
+        }
 
         Node newNode(x,y,h+1,newState);
-        solve(newNode,N);
+        solve(newNode,N,maxHeight);
     }
-    return FIND = false; // não encontrou solução
+    return FIND; // não encontrou solução
 }
 
 int main() { _
-    Node BEGIN; // posição inicial na matriz
     int N; // N = matriz NxN
+    int t = 0;
+    bool flag = false;
     while(cin >> OPC >> N) {
+        if(flag) cout << endl << "=============================================" << endl << endl;
+        flag = true;
+        cout << "Teste " << ++t << ": " << endl;
         totalNodes = 0;
         vvi matrix(N,vector<int>(N)); // estado inicial
 
@@ -161,15 +176,28 @@ int main() { _
         }
         BEGIN.matrix = matrix;
         BEGIN.height = 0;
+        int maxHeight = 0;
+        Node INIT = BEGIN;
+        FIND = false;
+        do{
+            if(maxHeight) {
+                cout << ">> Profundidade max (" << maxHeight-SUM << ") atingida!" << endl;
+                cout << ">> Atualizando profundidade..." << endl << endl;
+            }
+            recursion = false;
+            checkedStates.clear();
+            totalNodes = 0;
+            solve(INIT,N,maxHeight); // irá dizer se encontrei ou não a solução
+            maxHeight += SUM;
+        } while(recursion);
 
-        solve(BEGIN,N); // irá dizer se encontrei ou não a solução
         if(FIND) {
             cout << ">> Encontrei!" << endl;
             cout << ">> Profundidade da meta: " << aux.height << endl;
         } else {
             cout << ">> Nao encontrei!" << endl;
         }
-        cout << "Total de nos: " << totalNodes << endl;
+        cout << ">> Total de nos: " << totalNodes << endl;
         
         matrix.clear();
         checkedStates.clear();

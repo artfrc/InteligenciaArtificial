@@ -144,7 +144,12 @@ Node* solve(Node node, int N) {
 int main() { _
     Node BEGIN; // posição inicial na matriz
     int N; // N = matriz NxN
+    int t = 0;
+    bool flag = false;
     while(cin >> OPC >> N) {
+        if(flag) cout << endl << "=============================================" << endl << endl;
+        flag = true;
+        cout << "Teste " << ++t << ": " << endl;
         totalNodes = 0;
         vvi matrix(N,vector<int>(N)); // estado inicial
 
@@ -178,7 +183,7 @@ int main() { _
         } else {
             cout << ">> Nao encontrei!" << endl;
         }
-        cout << "Total de nos: " << totalNodes << endl;
+        cout << ">> Total de nos: " << totalNodes << endl;
         
         matrix.clear();
         checkedStates.clear();
