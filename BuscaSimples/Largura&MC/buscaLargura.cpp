@@ -28,6 +28,8 @@ pii END; // posição final para o personagem no labirinto
 int dx[] = {-1,1,0,0}; 
 int dy[] = {0,0,-1,1};
 
+
+int heuristic; // tipo de heuristica escolhida pelo usuário para o quebra cabeça
 int OPC; // 1 -> Jogo quebra-cabeça ; 2 -> Jogo do labirinto
 int totalNodes = 0;
 
@@ -67,7 +69,7 @@ Node aux; // irá auxiliar na função solve
 
 Node* solve(Node node, int N) {
     // Aqui será feito a busca em largura para os problemas
-
+ 
     queue<Node> Queue; // Fila para fazer a busca em largura
     Queue.push(node);
 
@@ -87,7 +89,7 @@ Node* solve(Node node, int N) {
 
         // Printa o estado que estou
         
-        cout << ">> Estado: " << totalNodes++ << endl;
+        cout << ">> Estado: " << ++totalNodes << endl;
         
         for(int l = 0; l < N; l++) {
             for(int r = 0; r < N; r++) {
@@ -108,7 +110,7 @@ Node* solve(Node node, int N) {
         for(int k = 0; k < 4; k++) {
             int x = i+dx[k];
             int y = j+dy[k];
-            
+
             // Verifico se são posições válidas para a matriz
             if(x < 0 or x >= N or y < 0 or y >= N) continue;
 
@@ -146,7 +148,7 @@ int main() { _
     int N; // N = matriz NxN
     int t = 0;
     bool flag = false;
-    while(cin >> OPC >> N) {
+    while(cin >> OPC >> N >> heuristic) {
         if(flag) cout << endl << "=============================================" << endl << endl;
         flag = true;
         cout << "Teste " << ++t << ": " << endl;

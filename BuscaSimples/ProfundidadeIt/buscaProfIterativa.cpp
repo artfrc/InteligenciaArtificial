@@ -29,7 +29,7 @@ int dx[] = {-1,1,0,0};
 int dy[] = {0,0,-1,1};
 
 int OPC; // 1 -> Jogo quebra-cabeça ; 2 -> Jogo do labirinto
-int totalNodes = 0;
+long long int totalNodes = 0;
 
 set<vvi> checkedStates; // guardo os estados já visitados
 
@@ -84,7 +84,7 @@ bool solve(Node node, int N, int maxHeight) {
 
     // Printa o estado que estou
         
-    cout << ">> Estado: " << totalNodes++ << endl;
+    cout << ">> Estado: " << ++totalNodes << endl;
         
     for(int l = 0; l < N; l++) {
         for(int r = 0; r < N; r++) {
@@ -183,13 +183,13 @@ int main() { _
             if(maxHeight) {
                 cout << ">> Profundidade max (" << maxHeight-SUM << ") atingida!" << endl;
                 cout << ">> Atualizando profundidade..." << endl << endl;
+                totalNodes = 0;
             }
             recursion = false;
             checkedStates.clear();
-            totalNodes = 0;
             solve(INIT,N,maxHeight); // irá dizer se encontrei ou não a solução
             maxHeight += SUM;
-        } while(recursion);
+        } while(recursion and !FIND);
 
         if(FIND) {
             cout << ">> Encontrei!" << endl;
