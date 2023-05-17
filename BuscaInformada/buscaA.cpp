@@ -1,6 +1,10 @@
 #include <iostream>
 #include <queue>
 #include <set>
+#include <map>
+#include <time.h>
+#include <iomanip>
+
 #define _ ios_base::sync_with_stdio(0); cin.tie(0);
 using namespace std;
 
@@ -13,11 +17,13 @@ pii END; // posição final para o personagem no labirinto
 int dx[] = {-1,1,0,0}; 
 int dy[] = {0,0,-1,1};
 
+int N; // N = matriz NxN
 int OPC; // 1 -> Jogo quebra-cabeça ; 2 -> Jogo do labirinto
-int heuristic; // tipo de heuristica escolhida pelo usuário para o quebra cabeça
+int UserHeuristic; // tipo de heuristica escolhida pelo usuário para o quebra cabeça
 int totalNodes = 0;
 
 set<vvi> checkedStates; // guardo os estados já visitados
+map<int,pii> solution; // guarda o estado solução (quebra-cabeça)
 
 // Struct para guardar a posição da matriz de um nó e a altura desse nó
 typedef struct Node {
@@ -39,10 +45,10 @@ typedef struct Node {
 /              FICARIAM MUITOS PARÂMETROS PARA PASSAR              /
 / =============================================================== */ 
 
-int calculateHeuristic(int i, int j, vvi mtx, int N) {
+int calculateHeuristic(int i, int j, vvi mtx) {
     if(OPC == 1) { // Quebra cabeça
         int ans = 0;
-        if(heuristic == 1) { // Peças na posição errada
+        if(UserHeuristic == 1) { // Peças na posição errada
             int count = 1;
             for(int i = 0; i < N; i++) {
                 for(int j = 0; j < N; j++) {
@@ -58,7 +64,13 @@ int calculateHeuristic(int i, int j, vvi mtx, int N) {
                 }
             }
         } else { // Soma das distâncias até a posição correta
-
+            for(int i = 0; i < N; i++) {
+                for(int j = 0; j < N; j++) {
+                    int e = mtx[i][j];
+                    int dist = abs(i-solution[e].first) + abs(j-solution[e].second);
+                    ans += dist;
+                }
+            }
         }
         return ans;
     } else { // Labirinto
@@ -68,7 +80,7 @@ int calculateHeuristic(int i, int j, vvi mtx, int N) {
 
 Node aux; // irá auxiliar na função solve
 
-Node* solve(Node node, int N) {
+Node* solve(Node node) {
     // Aqui será feito a busca em largura para os problemas
  
     priority_queue<Node> Queue; // Fila para fazer a busca A*
@@ -102,7 +114,6 @@ Node* solve(Node node, int N) {
         cout << endl;
 
         // =====================================================
-
         // Verifica se cheguei na solução
         if(heuristic == 0) {
             return &aux;
@@ -128,7 +139,7 @@ Node* solve(Node node, int N) {
                         newState[l][r] = matrix[i][j];    
                     } else if(l == i and r == j) {
                         newState[l][r] = matrix[x][y];
-                    }else {
+                    } else {
                         newState[l][r] = matrix[l][r];                    
                     }
                 }
@@ -141,7 +152,7 @@ Node* solve(Node node, int N) {
 
             // Distancia do novo estado até o estado final
             
-            int heuristic = calculateHeuristic(x,y,newState,N); 
+            int heuristic = calculateHeuristic(x,y,newState); 
 
             Node newNode(x,y,h+1,newState,heuristic);
             Queue.push(newNode); // posições do meu novo estado que se encontra o personagem no labirinto ou posição vazia no quebra-cabeça
@@ -151,16 +162,19 @@ Node* solve(Node node, int N) {
 }
 
 int main() { _
+    clock_t start, end; // calcular o tempo de execução do código
+    start = clock(); // marca o início
     Node BEGIN; // posição inicial na matriz
-    int N; // N = matriz NxN
     int t = 0;
     bool flag = false;
-    while(cin >> OPC >> N >> heuristic) {
+    while(cin >> OPC >> N >> UserHeuristic) {
         if(flag) cout << endl << "=============================================" << endl << endl;
         flag = true;
         cout << "Teste " << ++t << ": " << endl;
         totalNodes = 0;
         vvi matrix(N,vector<int>(N)); // estado inicial
+
+        int count = 1;
 
         for(int i = 0; i < N; i++) {
             for(int j = 0; j < N; j++) {
@@ -170,6 +184,16 @@ int main() { _
                     if(matrix[i][j] == 0) { // Posição vaga no quebra-cabça
                         BEGIN.row = i;
                         BEGIN.column = j;
+                    }
+
+                    // defino as posições para minha solução do quebra cabeça
+                    if(UserHeuristic == 2) {
+                        if(i == N/2 and j == N/2) {
+                            solution[0] = {i,j};
+                        } else {
+                            solution[count] = {i,j};
+                            count++;
+                        }
                     }
                 } else { // Labirinto
                     if(matrix[i][j] == 2) { // Posição inicial do personagem
@@ -185,9 +209,10 @@ int main() { _
 
         BEGIN.matrix = matrix;
         BEGIN.height = 0;
-        BEGIN.heuristic = calculateHeuristic(BEGIN.row,BEGIN.column,BEGIN.matrix,N);
+        BEGIN.heuristic = calculateHeuristic(BEGIN.row,BEGIN.column,BEGIN.matrix);
 
-        Node* ans = solve(BEGIN,N); // irá dizer se encontrei ou não a solução
+        Node* ans = solve(BEGIN); // irá dizer se encontrei ou não a solução
+        end = clock();
         if(ans != NULL) {
             cout << ">> Encontrei!" << endl;
             cout << ">> Profundidade da meta: " << ans->height << endl;
@@ -195,6 +220,11 @@ int main() { _
             cout << ">> Nao encontrei!" << endl;
         }
         cout << ">> Total de nos: " << totalNodes << endl;
+
+        double time_taken = double(end-start) / double(CLOCKS_PER_SEC);
+
+        cout << fixed << setprecision(5);
+        cout << ">> Tempo de execucao: " << time_taken << " segundos." << endl;
         
         matrix.clear();
         checkedStates.clear();

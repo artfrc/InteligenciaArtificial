@@ -1,6 +1,8 @@
 #include <iostream>
 #include <queue>
 #include <set>
+#include <time.h>
+#include <iomanip>
 #define _ ios_base::sync_with_stdio(0); cin.tie(0);
 using namespace std;
 
@@ -28,6 +30,7 @@ pii END; // posição final para o personagem no labirinto
 int dx[] = {-1,1,0,0}; 
 int dy[] = {0,0,-1,1};
 
+int heuristic; // tipo de heuristica escolhida pelo usuário para o quebra cabeça
 int OPC; // 1 -> Jogo quebra-cabeça ; 2 -> Jogo do labirinto
 long long int totalNodes = 0;
 
@@ -129,7 +132,6 @@ bool solve(Node node, int N, int maxHeight) {
             }
         }
 
-
         // verifico se já visitei esse estado
         if(checkedStates.find(newState) != checkedStates.end()) continue;
         if(h+1 > maxHeight) {
@@ -144,10 +146,12 @@ bool solve(Node node, int N, int maxHeight) {
 }
 
 int main() { _
+    clock_t start, end; // calcular o tempo de execução do código
+    start = clock(); // marca o início
     int N; // N = matriz NxN
     int t = 0;
     bool flag = false;
-    while(cin >> OPC >> N) {
+    while(cin >> OPC >> N >> heuristic) {
         if(flag) cout << endl << "=============================================" << endl << endl;
         flag = true;
         cout << "Teste " << ++t << ": " << endl;
@@ -191,6 +195,8 @@ int main() { _
             maxHeight += SUM;
         } while(recursion and !FIND);
 
+        end = clock();
+
         if(FIND) {
             cout << ">> Encontrei!" << endl;
             cout << ">> Profundidade da meta: " << aux.height << endl;
@@ -198,6 +204,11 @@ int main() { _
             cout << ">> Nao encontrei!" << endl;
         }
         cout << ">> Total de nos: " << totalNodes << endl;
+
+        double time_taken = double(end-start) / double(CLOCKS_PER_SEC);
+
+        cout << fixed << setprecision(5);
+        cout << ">> Tempo de execucao: " << time_taken << " segundos." << endl;
         
         matrix.clear();
         checkedStates.clear();

@@ -152,6 +152,7 @@ Teste 1:
 >> Encontrei!
 >> Profundidade da meta: 14
 >> Total de nos: 15
+>> Tempo de execucao: 0.00000 segundos.
 
 =============================================
 
@@ -309,6 +310,7 @@ Teste 2:
 >> Encontrei!
 >> Profundidade da meta: 14
 >> Total de nos: 15
+>> Tempo de execucao: 0.01562 segundos.
 
 =============================================
 
@@ -476,6 +478,7 @@ Teste 3:
 >> Encontrei!
 >> Profundidade da meta: 13
 >> Total de nos: 16
+>> Tempo de execucao: 0.01562 segundos.
 
 =============================================
 
@@ -633,6 +636,7 @@ Teste 4:
 >> Encontrei!
 >> Profundidade da meta: 14
 >> Total de nos: 15
+>> Tempo de execucao: 0.01562 segundos.
 
 =============================================
 
@@ -790,3 +794,4 @@ Teste 5:
 >> Encontrei!
 >> Profundidade da meta: 14
 >> Total de nos: 15
+>> Tempo de execucao: 0.01562 segundos.

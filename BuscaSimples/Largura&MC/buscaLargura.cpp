@@ -1,6 +1,8 @@
 #include <iostream>
 #include <queue>
 #include <set>
+#include <time.h>
+#include <iomanip>
 #define _ ios_base::sync_with_stdio(0); cin.tie(0);
 using namespace std;
 
@@ -144,6 +146,8 @@ Node* solve(Node node, int N) {
 }
 
 int main() { _
+    clock_t start, end; // calcular o tempo de execução do código
+    start = clock(); // marca o início
     Node BEGIN; // posição inicial na matriz
     int N; // N = matriz NxN
     int t = 0;
@@ -179,6 +183,7 @@ int main() { _
         BEGIN.height = 0;
 
         Node* ans = solve(BEGIN,N); // irá dizer se encontrei ou não a solução
+        end = clock();
         if(ans != NULL) {
             cout << ">> Encontrei!" << endl;
             cout << ">> Profundidade da meta: " << ans->height << endl;
@@ -186,6 +191,11 @@ int main() { _
             cout << ">> Nao encontrei!" << endl;
         }
         cout << ">> Total de nos: " << totalNodes << endl;
+        
+        double time_taken = double(end-start) / double(CLOCKS_PER_SEC);
+
+        cout << fixed << setprecision(5);
+        cout << ">> Tempo de execucao: " << time_taken << " segundos." << endl;
         
         matrix.clear();
         checkedStates.clear();
