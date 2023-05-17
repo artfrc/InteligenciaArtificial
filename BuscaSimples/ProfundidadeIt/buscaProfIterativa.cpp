@@ -207,7 +207,7 @@ int main() { _
 
         double time_taken = double(end-start) / double(CLOCKS_PER_SEC);
 
-        cout << fixed << setprecision(5);
+        cout << fixed << setprecision(8);
         cout << ">> Tempo de execucao: " << time_taken << " segundos." << endl;
         
         matrix.clear();
