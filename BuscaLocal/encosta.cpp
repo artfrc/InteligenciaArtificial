@@ -2,6 +2,8 @@
 #include <queue>
 #include <set>
 #include <map>
+#include <ctime>
+#include <cstdlib>
 
 #define _ ios_base::sync_with_stdio(0); cin.tie(0);
 using namespace std;
@@ -43,6 +45,25 @@ typedef struct Node {
 /              FICARIAM MUITOS PARÂMETROS PARA PASSAR              /
 / =============================================================== */ 
 
+
+// Função para gerar um estado aleatório
+void randomMatrix(vvi& matrix,int N) {
+    unsigned seed = time(0);
+    srand(seed);
+    set<int> randomNumbers;
+    for(int i = 0; i < N; i++) {
+        int j = 0;
+        while(j < N) {
+            int number = rand() % (N*N);    
+            if(randomNumbers.find(number) == randomNumbers.end()) {
+                matrix[i][j] = number;
+                j++;
+                randomNumbers.insert(number);
+            }
+        }
+    }
+}
+
 int calculateHeuristic(int i, int j, vvi mtx) {
     if(OPC == 1) { // Quebra cabeça
         int ans = 0;
@@ -83,6 +104,7 @@ Node* solve(Node node) {
  
     priority_queue<Node> Queue; // Fila para fazer a busca A*
     Queue.push(node);
+    int lastHeuristic = -1; // guarda a heurística do último estado
 
     checkedStates.insert(node.matrix); // Estados que já foram visitados
 
@@ -98,6 +120,12 @@ Node* solve(Node node) {
         i = aux.row;
         j = aux.column;
         heuristic = aux.heuristic;
+
+        if(lastHeuristic != -1) {
+            
+        }
+
+        lastHeuristic = heuristic;
 
         // Printa o estado que estou
         
