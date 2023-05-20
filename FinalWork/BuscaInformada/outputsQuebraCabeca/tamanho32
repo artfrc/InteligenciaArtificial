@@ -1,0 +1,120 @@
+>> Solucao encontrada!
+
+Estado: 0
+5 4 0
+6 1 8
+7 3 2
+
+Estado: 2
+5 0 4
+6 1 8
+7 3 2
+
+Estado: 5
+5 1 4
+6 0 8
+7 3 2
+
+Estado: 7
+5 1 4
+6 3 8
+7 0 2
+
+Estado: 16
+5 1 4
+6 3 8
+7 2 0
+
+Estado: 32
+5 1 4
+6 3 0
+7 2 8
+
+Estado: 54
+5 1 4
+6 0 3
+7 2 8
+
+Estado: 85
+5 1 4
+6 2 3
+7 0 8
+
+Estado: 122
+5 1 4
+6 2 3
+0 7 8
+
+Estado: 189
+5 1 4
+0 2 3
+6 7 8
+
+Estado: 265
+0 1 4
+5 2 3
+6 7 8
+
+Estado: 381
+1 0 4
+5 2 3
+6 7 8
+
+Estado: 516
+1 2 4
+5 0 3
+6 7 8
+
+Estado: 641
+1 2 4
+0 5 3
+6 7 8
+
+Estado: 781
+0 2 4
+1 5 3
+6 7 8
+
+Estado: 1072
+2 0 4
+1 5 3
+6 7 8
+
+Estado: 1462
+2 4 0
+1 5 3
+6 7 8
+
+Estado: 1906
+2 4 3
+1 5 0
+6 7 8
+
+Estado: 2376
+2 4 3
+1 0 5
+6 7 8
+
+Estado: 2705
+2 0 3
+1 4 5
+6 7 8
+
+Estado: 3391
+0 2 3
+1 4 5
+6 7 8
+
+Estado: 3936
+1 2 3
+0 4 5
+6 7 8
+
+Estado: 4283
+1 2 3
+4 0 5
+6 7 8
+
+>> Numero de nos visitados: 181440
+>> Profundidade: 22
+>> Custo da solucao: 23
